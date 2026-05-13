@@ -42,8 +42,8 @@ public class TPSMonitor {
             tickCount = 0;
             lastTickTime = now;
 
-            // Lag spike alert
-            if (lagAlertEnabled && tps < lagAlertThreshold) {
+            // Lag spike alert (skip first 60 seconds for server warmup)
+            if (lagAlertEnabled && historyIndex > 60 && tps < lagAlertThreshold) {
                 if (!lagAlerted) {
                     lagAlerted = true;
                     alertOps(tps);

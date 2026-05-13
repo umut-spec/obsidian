@@ -46,11 +46,7 @@ public class BackupManager {
         new Thread(() -> {
             try {
                 LOGGER.info("[Obsidian] Starting world backup...");
-
-                // Save all worlds via console command (no plugin dependency needed)
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "save-all flush");
-
-                Thread.sleep(3000); // Wait for saves to flush
+                // Worlds auto-save periodically, we just zip the current state
 
                 File backupDir = new File("obsidian-backups");
                 if (!backupDir.exists()) backupDir.mkdirs();
