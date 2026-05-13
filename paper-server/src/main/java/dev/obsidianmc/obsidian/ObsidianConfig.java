@@ -154,6 +154,41 @@ public class ObsidianConfig {
     public static boolean logConnectionEvents = true;
 
     // ==========================================
+    // Features
+    // ==========================================
+
+    // TPS Monitor & Lag Alerts
+    public static boolean tpsMonitorEnabled = true;
+    public static boolean lagAlertEnabled = true;
+    public static double lagAlertThreshold = 15.0;
+
+    // AFK System
+    public static boolean afkEnabled = true;
+    public static int afkTimeoutMinutes = 15;
+    public static boolean afkKickEnabled = false;
+    public static int afkCheckIntervalSeconds = 30;
+
+    // Chat Formatter
+    public static boolean chatFormatEnabled = false;
+    public static String chatFormat = "&7[&f{world}&7] &f{player} &8» &7{message}";
+
+    // Random MOTD
+    public static boolean randomMotdEnabled = false;
+    public static java.util.List<String> motdList = java.util.List.of(
+            "&5⬛ &dObsidian Server &8| &7Performance & Security",
+            "&5⬛ &fPowered by Obsidian &8| &7obsidian.umuterden.com",
+            "&5⬛ &dHigh Performance &8| &7Low Latency"
+    );
+
+    // Vanish
+    public static boolean vanishEnabled = true;
+
+    // Backup System
+    public static boolean backupEnabled = false;
+    public static int backupIntervalMinutes = 360; // 6 hours
+    public static int backupKeepCount = 5;
+
+    // ==========================================
     // Branding
     // ==========================================
     public static String serverBrand = "Obsidian";
@@ -364,5 +399,47 @@ public class ObsidianConfig {
     private static void brandingSettings() {
         serverBrand = getString("branding.server-brand", serverBrand);
         serverMotd = getString("branding.server-motd", serverMotd);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void featureSettings() {
+        // TPS Monitor
+        tpsMonitorEnabled = getBoolean("features.tps-monitor.enabled", tpsMonitorEnabled);
+        lagAlertEnabled = getBoolean("features.tps-monitor.lag-alert", lagAlertEnabled);
+        lagAlertThreshold = getDouble("features.tps-monitor.lag-alert-threshold", lagAlertThreshold);
+
+        // AFK
+        afkEnabled = getBoolean("features.afk.enabled", afkEnabled);
+        afkTimeoutMinutes = getInt("features.afk.timeout-minutes", afkTimeoutMinutes);
+        afkKickEnabled = getBoolean("features.afk.kick-enabled", afkKickEnabled);
+        afkCheckIntervalSeconds = getInt("features.afk.check-interval-seconds", afkCheckIntervalSeconds);
+
+        // Chat Formatter
+        chatFormatEnabled = getBoolean("features.chat-format.enabled", chatFormatEnabled);
+        chatFormat = getString("features.chat-format.format", chatFormat);
+
+        // Random MOTD
+        randomMotdEnabled = getBoolean("features.random-motd.enabled", randomMotdEnabled);
+        java.util.List<String> defaultMotds = java.util.List.of(
+                "&5\u2B1B &dObsidian Server &8| &7Performance & Security",
+                "&5\u2B1B &fPowered by Obsidian &8| &7obsidian.umuterden.com",
+                "&5\u2B1B &dHigh Performance &8| &7Low Latency"
+        );
+        motdList = getList("features.random-motd.motds", defaultMotds);
+
+        // Vanish
+        vanishEnabled = getBoolean("features.vanish.enabled", vanishEnabled);
+
+        // Backup
+        backupEnabled = getBoolean("features.backup.enabled", backupEnabled);
+        backupIntervalMinutes = getInt("features.backup.interval-minutes", backupIntervalMinutes);
+        backupKeepCount = getInt("features.backup.keep-count", backupKeepCount);
+
+        // Apply settings to feature managers
+        dev.obsidianmc.obsidian.feature.TPSMonitor.setLagAlertEnabled(lagAlertEnabled);
+        dev.obsidianmc.obsidian.feature.TPSMonitor.setLagAlertThreshold(lagAlertThreshold);
+        dev.obsidianmc.obsidian.feature.ChatFormatter.setEnabled(chatFormatEnabled);
+        dev.obsidianmc.obsidian.feature.ChatFormatter.setFormat(chatFormat);
+        dev.obsidianmc.obsidian.feature.MOTDManager.setMotdList(motdList);
     }
 }

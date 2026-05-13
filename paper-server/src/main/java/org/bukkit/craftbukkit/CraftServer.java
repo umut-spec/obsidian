@@ -603,6 +603,15 @@ public final class CraftServer implements Server {
             CraftDefaultPermissions.registerCorePermissions();
             if (!io.papermc.paper.configuration.GlobalConfiguration.get().misc.loadPermissionsYmlBeforePlugins) this.loadCustomPermissions(); // Paper
             this.syncCommands();
+            // Obsidian start - Register event listener for features
+            if (this.pluginManager.getPlugins().length > 0) {
+                this.pluginManager.registerEvents(
+                        new dev.obsidianmc.obsidian.feature.ObsidianListener(),
+                        this.pluginManager.getPlugins()[0]
+                );
+                this.getLogger().info("[Obsidian] Registered feature event listeners.");
+            }
+            // Obsidian end
         }
     }
 

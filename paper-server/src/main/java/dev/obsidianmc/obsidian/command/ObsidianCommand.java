@@ -23,7 +23,7 @@ public class ObsidianCommand extends Command {
     public ObsidianCommand(String name) {
         super(name);
         this.description = "Obsidian server management command";
-        this.usageMessage = "/obsidian <version|reload|status|unban|bans>";
+        this.usageMessage = "/obsidian <version|reload|status|tps|vanish|backup|unban|bans>";
         this.setPermission("obsidian.command");
     }
 
@@ -123,7 +123,45 @@ public class ObsidianCommand extends Command {
                     }
                 }
             }
-            default -> sender.sendMessage(ChatColor.RED + "Unknown subcommand. Use: /obsidian <version|reload|status|unban|bans>");
+            case "tps" -> {
+                dev.obsidianmc.obsidian.feature.TPSMonitor tps = null; // static access
+                double tps1s = dev.obsidianmc.obsidian.feature.TPSMonitor.getCurrentTPS();
+                double tps10s = dev.obsidianmc.obsidian.feature.TPSMonitor.getAverageTPS(10);
+                double tps60s = dev.obsidianmc.obsidian.feature.TPSMonitor.getAverageTPS(60);
+                double mspt = dev.obsidianmc.obsidian.feature.TPSMonitor.getMSPT();
+                sender.sendMessage("");
+                sender.sendMessage(ChatColor.LIGHT_PURPLE + "⬛ Obsidian TPS Monitor");
+                sender.sendMessage(ChatColor.DARK_GRAY + "━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                sender.sendMessage(ChatColor.GRAY + "  TPS (1s):  " + dev.obsidianmc.obsidian.feature.TPSMonitor.getColoredTPS(tps1s));
+                sender.sendMessage(ChatColor.GRAY + "  TPS (10s): " + dev.obsidianmc.obsidian.feature.TPSMonitor.getColoredTPS(tps10s));
+                sender.sendMessage(ChatColor.GRAY + "  TPS (60s): " + dev.obsidianmc.obsidian.feature.TPSMonitor.getColoredTPS(tps60s));
+                ChatColor msptColor = mspt <= 50 ? ChatColor.GREEN : mspt <= 55 ? ChatColor.YELLOW : ChatColor.RED;
+                sender.sendMessage(ChatColor.GRAY + "  MSPT:      " + msptColor + String.format("%.1f", mspt) + "ms");
+                sender.sendMessage(ChatColor.GRAY + "  Players:   " + ChatColor.WHITE + org.bukkit.Bukkit.getOnlinePlayers().size());
+                sender.sendMessage(ChatColor.DARK_GRAY + "━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                sender.sendMessage("");
+            }
+            case "vanish" -> {
+                if (!(sender instanceof org.bukkit.entity.Player player)) {
+                    sender.sendMessage(ChatColor.RED + "Only players can use vanish.");
+                    return true;
+                }
+                if (!sender.hasPermission("obsidian.command.vanish")) {
+                    sender.sendMessage(ChatColor.RED + "No permission.");
+                    return true;
+                }
+                boolean vanished = dev.obsidianmc.obsidian.feature.VanishManager.toggle(player);
+                // Message is sent by VanishManager
+            }
+            case "backup" -> {
+                if (!sender.hasPermission("obsidian.command.backup")) {
+                    sender.sendMessage(ChatColor.RED + "No permission.");
+                    return true;
+                }
+                sender.sendMessage(ChatColor.GREEN + "✓ " + ChatColor.GRAY + "Starting manual backup...");
+                dev.obsidianmc.obsidian.feature.BackupManager.performBackupAsync();
+            }
+            default -> sender.sendMessage(ChatColor.RED + "Unknown subcommand. Use: /obsidian <version|reload|status|tps|vanish|backup|unban|bans>");
         }
 
         return true;
@@ -137,7 +175,7 @@ public class ObsidianCommand extends Command {
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
         if (args.length == 1) {
-            return List.of("version", "reload", "status", "unban", "bans");
+            return List.of("version", "reload", "status", "tps", "vanish", "backup", "unban", "bans");
         }
         return Collections.emptyList();
     }
