@@ -1,5 +1,6 @@
 package dev.obsidianmc.obsidian.feature;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -33,12 +34,12 @@ public class VanishManager {
     /**
      * Make player vanished
      */
+    @SuppressWarnings("deprecation")
     public static void vanish(Player player) {
         VANISHED.add(player.getUniqueId());
-        for (Player other : player.getServer().getOnlinePlayers()) {
+        for (Player other : Bukkit.getOnlinePlayers()) {
             if (!other.equals(player) && !other.isOp()) {
-                other.hidePlayer(org.bukkit.Bukkit.getPluginManager().getPlugins().length > 0
-                        ? org.bukkit.Bukkit.getPluginManager().getPlugins()[0] : null, player);
+                other.hidePlayer(player);
             }
         }
         player.sendMessage(ChatColor.LIGHT_PURPLE + "⬛ " + ChatColor.GRAY + "You are now vanished.");
@@ -48,12 +49,12 @@ public class VanishManager {
     /**
      * Make player visible again
      */
+    @SuppressWarnings("deprecation")
     public static void unvanish(Player player) {
         VANISHED.remove(player.getUniqueId());
-        for (Player other : player.getServer().getOnlinePlayers()) {
+        for (Player other : Bukkit.getOnlinePlayers()) {
             if (!other.equals(player)) {
-                other.showPlayer(org.bukkit.Bukkit.getPluginManager().getPlugins().length > 0
-                        ? org.bukkit.Bukkit.getPluginManager().getPlugins()[0] : null, player);
+                other.showPlayer(player);
             }
         }
         player.sendMessage(ChatColor.GREEN + "✓ " + ChatColor.GRAY + "You are now visible.");
@@ -70,13 +71,13 @@ public class VanishManager {
     /**
      * Handle new player join — hide vanished players from them
      */
+    @SuppressWarnings("deprecation")
     public static void onPlayerJoin(Player joiner) {
         if (joiner.isOp()) return;
         for (UUID vanishedId : VANISHED) {
-            Player vanished = org.bukkit.Bukkit.getPlayer(vanishedId);
+            Player vanished = Bukkit.getPlayer(vanishedId);
             if (vanished != null && vanished.isOnline()) {
-                joiner.hidePlayer(org.bukkit.Bukkit.getPluginManager().getPlugins().length > 0
-                        ? org.bukkit.Bukkit.getPluginManager().getPlugins()[0] : null, vanished);
+                joiner.hidePlayer(vanished);
             }
         }
     }

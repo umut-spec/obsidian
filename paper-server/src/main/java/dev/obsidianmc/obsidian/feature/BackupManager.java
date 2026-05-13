@@ -47,18 +47,10 @@ public class BackupManager {
             try {
                 LOGGER.info("[Obsidian] Starting world backup...");
 
-                // Save all worlds first
-                Bukkit.getScheduler().runTask(
-                    Bukkit.getPluginManager().getPlugins().length > 0
-                        ? Bukkit.getPluginManager().getPlugins()[0] : null,
-                    () -> {
-                        for (World world : Bukkit.getWorlds()) {
-                            world.save();
-                        }
-                    }
-                );
+                // Save all worlds via console command (no plugin dependency needed)
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "save-all flush");
 
-                Thread.sleep(2000); // Wait for saves to flush
+                Thread.sleep(3000); // Wait for saves to flush
 
                 File backupDir = new File("obsidian-backups");
                 if (!backupDir.exists()) backupDir.mkdirs();
