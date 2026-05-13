@@ -1,0 +1,73 @@
+.gradle/
+build/
+
+# Eclipse stuff
+.classpath
+.project
+.settings/
+
+# VSCode stuff
+.vscode/
+
+# netbeans
+nbproject/
+nbactions.xml
+
+# vim
+.*.sw[a-p]
+
+# various other potential build files
+bin/
+dist/
+manifest.mf
+__pycache__/
+
+# Mac filesystem dust
+.DS_Store/
+.DS_Store
+
+# intellij
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+
+# JetBrains Fleet
+.fleet/
+
+# Linux temp files
+*~
+
+# other stuff
+run/
+logs/
+
+!gradle/wrapper/gradle-wrapper.jar
+
+test-plugin.settings.gradle.kts
+paper-generator.settings.gradle.kts
+
+# Don't track patched vanilla submodules
+paper-server/src/minecraft/
+
+# Obsidian - Test Server
+Test-Server-MC/
+test-server/
+
+# Obsidian - Runtime files
+obsidian.yml
+obsidian-bans.json
+server.jar
+*.log
+
+# Obsidian - Build artifacts
+paper-server/build/
+paper-api/build/
+paper-mojangapi/build/
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# OS junk
+Thumbs.db
+desktop.ini

@@ -1,0 +1,122 @@
+name: Obsidian Build
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [25]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "obsidian@obsidianmc.dev"
+          git config --global user.name "ObsidianMC"
+
+      - name: Apply Patches
+        run: ./gradlew applyPatches --no-daemon --stacktrace
+
+      - name: Build
+        run: ./gradlew build --no-daemon --stacktrace
+
+      - name: Build Paperclip JAR
+        run: ./gradlew createPaperclipJar --no-daemon
+
+      - name: Upload Server JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: obsidian-server-${{ github.sha }}
+          path: paper-server/build/libs/paper-paperclip-*.jar
+          retention-days: 30
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: "**/build/test-results/test/TEST-*.xml"
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "obsidian@obsidianmc.dev"
+          git config --global user.name "ObsidianMC"
+
+      - name: Build Release
+        run: |
+          ./gradlew applyPatches --no-daemon
+          ./gradlew createPaperclipJar --no-daemon
+
+      - name: Get Version
+        id: version
+        run: echo "version=$(date +'%Y.%m.%d')-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: "Obsidian Build ${{ steps.version.outputs.version }}"
+          body: |
+            ## ⬛ Obsidian Server Build
+            
+            **Commit:** `${{ github.sha }}`
+            **Branch:** `${{ github.ref_name }}`
+            **Built by:** GitHub Actions
+            
+            ### 📥 Download
+            Download the JAR below and place it in your server directory.
+            
+            ### ⚙️ Requirements
+            - Java 25+
+            - Minimum 2GB RAM
+            
+            ### 🔗 Links
+            - [Website](https://obsidian.umuterden.com)
+            - [GitHub](https://github.com/umutspec/obsidian)
+          files: paper-server/build/libs/paper-paperclip-*.jar
+          draft: false
+          prerelease: false
