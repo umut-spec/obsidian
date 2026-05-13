@@ -9,12 +9,12 @@
 [![MC Version](https://img.shields.io/badge/Minecraft-26.1.2-purple?style=for-the-badge)](https://minecraft.net)
 [![Java](https://img.shields.io/badge/Java-25-orange?style=for-the-badge)](https://adoptium.net)
 [![License](https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge)](LICENSE.md)
-[![Build](https://img.shields.io/github/actions/workflow/status/umutspec/obsidian/build.yml?style=for-the-badge&label=Build)](https://github.com/umutspec/obsidian/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/umut-spec/obsidian/build.yml?style=for-the-badge&label=Build)](https://github.com/umut-spec/obsidian/actions)
 [![Website](https://img.shields.io/badge/Website-obsidian.umuterden.com-blueviolet?style=for-the-badge)](https://obsidian.umuterden.com)
 
 **Obsidian** is a high-performance, security-hardened Minecraft server fork based on [Paper](https://github.com/PaperMC/Paper). It combines aggressive performance optimizations with comprehensive exploit protection to deliver the most robust server experience possible.
 
-[Website](https://obsidian.umuterden.com) · [Downloads](https://github.com/umutspec/obsidian/releases) · [Issues](https://github.com/umutspec/obsidian/issues)
+[Website](https://obsidian.umuterden.com) · [Downloads](https://github.com/umut-spec/obsidian/releases) · [Issues](https://github.com/umut-spec/obsidian/issues)
 
 </div>
 
@@ -59,7 +59,7 @@
 ### Build Steps
 
 ```bash
-git clone https://github.com/umutspec/obsidian.git
+git clone https://github.com/umut-spec/obsidian.git
 cd obsidian
 
 # Windows
@@ -161,13 +161,13 @@ paper-server/src/main/java/dev/obsidianmc/obsidian/
 - [PaperMC](https://papermc.io) — The foundation this fork is built on
 - [SpigotMC](https://spigotmc.org) — The original Bukkit continuation
 - [Mojang](https://mojang.com) — The creators of Minecraft
-- [umutspec](https://github.com/umutspec) — Obsidian developer
+- [umut-spec](https://github.com/umut-spec) — Obsidian developer
 
 ## 🔗 Links
 
 - **Website:** [obsidian.umuterden.com](https://obsidian.umuterden.com)
-- **GitHub:** [github.com/umutspec/obsidian](https://github.com/umutspec/obsidian)
-- **Downloads:** [Releases](https://github.com/umutspec/obsidian/releases)
+- **GitHub:** [github.com/umut-spec/obsidian](https://github.com/umut-spec/obsidian)
+- **Downloads:** [Releases](https://github.com/umut-spec/obsidian/releases)
 
 ## 📄 License
 
